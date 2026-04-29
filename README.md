@@ -7,6 +7,10 @@
 * **Health Check:** Displays battery status (Charging, Discharging, etc.).
 * **Lightweight:** Written in Python for Android.
 
+## 🖼️ Gallery
+![Execution](https://github.com/ActuallyTrizon/DroidPulse/raw/main/execute.jpg)
+
+
 ## 🚀 Installation & Usage
 1. Install Termux from GitHub or F-Droid.
 2. Install Termux Api from GitHub or F-Droid.
