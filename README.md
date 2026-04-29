@@ -8,7 +8,8 @@
 * **Lightweight:** Written in Python for Android.
 
 ## 🖼️ Gallery
-![Execution](https://github.com/ActuallyTrizon/DroidPulse/raw/main/execute.jpg)
+Execution
+https://github.com/ActuallyTrizon/DroidPulse/raw/main/execute.jpg
 
 
 ## 🚀 Installation & Usage
