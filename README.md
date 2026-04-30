@@ -1,11 +1,14 @@
-# DroidPulse 📱
+# ToolDroid 🛠️
 
-**DroidPulse** is a Python-based system monitor built specifically for Termux. It provides real-time insights into your device's hardware, focusing on battery health and status.
+**ToolDroid** is a specialized system utility suite for Android devices (Honor/MagicOS optimized). It leverages Termux and Shizuku to provide deep hardware insights and system-level optimizations that standard apps cannot reach.
 
-## ✨ Features
-* **Real-time Monitoring:** Tracks battery percentage and temperature.
-* **Health Check:** Displays battery status (Charging, Discharging, etc.).
-* **Lightweight:** Written in Python for Android.
+## 🚀 Advanced Features
+* **Hybrid Monitoring:** Seamlessly switches between standard API and Shizuku `dumpsys` data.
+* **Deep Health Metrics:** Calculates actual battery degradation using hardware charge counters.
+* **System Trimming:** (Shizuku Required) Integrated commands to trim system caches and free up RAM.
+* **Thermal Intelligence:** Monitor real-time milliamps and thermal thresholds.
+
+> It defaults to standard if you have Shizuku it will unlock the system features and optimizations.
 
 ## 🖼️ Gallery
 ![Execution](https://github.com/ActuallyTrizon/DroidPulse/raw/main/execute.jpg)
