@@ -5,7 +5,7 @@ import sys
 import subprocess
 
 class ToolDroid:
-    def __init__(self, design_capacity_mah=5200):
+    def __init__(self, design_capacity_mah=7000):
         self.design_capacity = design_capacity_mah
         self.colors = {
             "header": "\033[95m",
@@ -52,9 +52,8 @@ class ToolDroid:
         if not core:
             return f"{self.colors['fail']}System Error: API Unreachable{self.colors['end']}"
 
-        # Build Output
         screen = [
-            f"{self.colors['header']}{self.colors['bold']}--- ToolDroid Professional v1.0 ---{self.colors['end']}",
+            f"{self.colors['header']}{self.colors['bold']}--- ToolDroid v1.0 by Trizon ---{self.colors['end']}",
             f"Power State:  {core.get('status')} ({core.get('percentage')}%)",
             f"Source:       {core.get('plugged', 'INTERNAL')}",
             "─" * 35,
@@ -66,7 +65,6 @@ class ToolDroid:
         ]
 
         if adv:
-            # Calculation logic
             full_cap = int(adv.get('Full charge capacity', 0)) // 1000
             curr_cap = int(adv.get('Charge counter', 0)) // 1000
             health_pct = (full_cap / self.design_capacity) * 100 if full_cap > 0 else 0
@@ -92,7 +90,7 @@ if __name__ == "__main__":
     app = ToolDroid()
     try:
         while True:
-            sys.stdout.write("\033[2J\033[H") # Clean clear
+            sys.stdout.write("\033[2J\033[H")
             print(app.render_ui())
             time.sleep(2)
     except KeyboardInterrupt:
