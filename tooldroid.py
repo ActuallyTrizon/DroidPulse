@@ -29,7 +29,6 @@ class ToolDroid:
 
     def _exec_shizuku(self, command):
         try:
-            # Faster execution with a direct subprocess call
             result = subprocess.check_output(['sh', self.rish_path, '-c', command], stderr=subprocess.DEVNULL)
             return result.decode('utf-8')
         except:
@@ -43,7 +42,6 @@ class ToolDroid:
             return None
 
     def fetch_hw_data(self):
-        # Increased sync frequency to 2s for better response
         curr_time = time.time()
         if curr_time - self.last_hw_check > 2 or self.cached_hw is None:
             raw_dump = self._exec_shizuku("dumpsys battery")
@@ -70,11 +68,11 @@ class ToolDroid:
 
         screen = [
             f"{self.colors['header']}{self.colors['bold']}--- Trizon's ToolDroid v1.5.2 ---{self.colors['end']}",
-            f"Power State:  {api.get('status')} ({pct}%)",
+            f"State:  {api.get('status')} ({pct}%)",
             "─" * 35,
             f"{self.colors['core']}[ DEFAULT MONITOR ]{self.colors['end']}",
             f"Temperature:  {temp}°C",
-            f"Flow Rate:    {current_ma} mA",
+            f"Current:    {current_ma} mA",
             "─" * 35
         ]
 
@@ -88,9 +86,9 @@ class ToolDroid:
                 health_val = (max_val / self.design_capacity) * 100
                 
                 screen += [
-                    f"{self.colors['shizuku']}[ SHIZUKU ENGINE ACTIVE ]{self.colors['end']}",
-                    f"True Health:  {health_val:.1f}%",
-                    f"Max Cap:      {max_val} mAh",
+                    f"{self.colors['shizuku']}[ SHIZUKU MONITOR ]{self.colors['end']}",
+                    f"Battery Health:  {health_val:.1f}%",
+                    f"Listed Capacity:      {max_val} mAh",
                     "─" * 35
                 ]
             except:
@@ -100,7 +98,7 @@ class ToolDroid:
 
         screen += [
             f"{self.colors['love']}❤ Mey, I love you. I hate how far we are{self.colors['end']}",
-            f"{self.colors['love']}  and how little and stupid I do.{self.colors['end']}",
+            f"{self.colors['love']}  and how little I can give you and stupid I am.{self.colors['end']}",
             "─" * 35,
             "Refresh: 100ms | HW Sync: 2s"
         ]
