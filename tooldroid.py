@@ -19,8 +19,7 @@ class ToolDroid:
         }
 
     def _exec_shizuku(self, command):
-        try:
-        result = subprocess.check_output(
+        try:result = subprocess.check_output(
             ['sh', self.rish_path, '-c', command], 
             stderr=subprocess.DEVNULL,
             shell=False
