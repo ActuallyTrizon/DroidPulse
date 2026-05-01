@@ -18,15 +18,16 @@ class ToolDroid:
             "bold": "\033[1m"
         }
 
-    def _exec_shizuku(self, command):
-        try:result = subprocess.check_output(
-            ['sh', self.rish_path, '-c', command], 
-            stderr=subprocess.DEVNULL,
-            shell=False
-        )return result.decode('utf-8')
-    except Exception as e:
-        return None
-
+        def _exec_shizuku(self, command):
+        try:
+            result = subprocess.check_output(
+                ['sh', self.rish_path, '-c', command], 
+                stderr=subprocess.DEVNULL,
+                shell=False
+            )
+            return result.decode('utf-8')
+        except Exception as e:
+            return None
 
     def fetch_core_data(self):
         try:
