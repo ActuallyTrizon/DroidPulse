@@ -17,7 +17,6 @@ class ToolDroid:
             "end": "\033[0m",
             "bold": "\033[1m"
         }
-        # Handle termination signals to exit session cleanly
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
 
@@ -57,14 +56,13 @@ class ToolDroid:
         if not api:
             return f"{self.colors['fail']}ERROR: Termux:API Unreachable{self.colors['end']}"
 
-        # Current level and basic status
         pct = api.get('percentage', 0)
         status = api.get('status', 'Unknown')
         temp = api.get('temperature', 0)
         current_ma = api.get('current', 0)
 
         screen = [
-            f"{self.colors['header']}{self.colors['bold']}--- Trizon's ToolDroid v1.4 ---{self.colors['end']}",
+            f"{self.colors['header']}{self.colors['bold']}--- Trizon's MonitorDroid v1.0.0 by the way mey i love you ---{self.colors['end']}",
             f"Power State:  {status} ({pct}%)",
             "─" * 35,
             f"{self.colors['core']}[ DEFAULT MONITOR ]{self.colors['end']}",
@@ -75,14 +73,11 @@ class ToolDroid:
 
         if hw:
             try:
-                # Find the actual hardware max capacity register
                 f_cap_raw = hw.get('full charge capacity') or hw.get('charge full') or hw.get('charge_full')
                 f_cap = int(f_cap_raw) if f_cap_raw else 0
                 
-                # Unit correction
                 if f_cap > 20000: f_cap //= 1000
                 
-                # If Shizuku can't find 'Full', fall back to design capacity for the label
                 max_val = f_cap if f_cap > 0 else self.design_capacity
                 health_val = (max_val / self.design_capacity) * 100
                 
@@ -106,11 +101,10 @@ class ToolDroid:
 if __name__ == "__main__":
     app = ToolDroid()
     while True:
-        # Check if parent process (Termux) is still alive
         if os.getppid() == 1: 
             break
         
         sys.stdout.write("\033[2J\033[H")
         sys.stdout.write(app.render())
         sys.stdout.flush()
-        time.sleep(0.5) # High-speed refresh
+        time.sleep(0.5)
