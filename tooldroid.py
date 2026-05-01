@@ -13,7 +13,7 @@ class ToolDroid:
             "header": "\033[95m",
             "core": "\033[94m",
             "shizuku": "\033[92m",
-            "love": "\033[91m",  # Added red for the message
+            "love": "\033[91m", # Red for the message
             "fail": "\033[91m",
             "end": "\033[0m",
             "bold": "\033[1m"
@@ -22,17 +22,23 @@ class ToolDroid:
         signal.signal(signal.SIGTERM, self.exit_gracefully)
 
     def exit_gracefully(self, signum, frame):
-        print(f"\n{self.colors['fail']}Session Terminated.{self.colors['end']}")
+        print(f"\n{self.colors['fail']}Monitor Offline.{self.colors['end']}")
         sys.exit(0)
 
     def _exec_shizuku(self, command):
         try:
-            return subprocess.check_output(['sh', self.rish_path, '-c', command], stderr=subprocess.DEVNULL).decode('utf-8')
+            # Added a timeout to prevent the flickering "Not Authorized" bug
+            result = subprocess.run(
+                ['sh', self.rish_path, '-c', command], 
+                capture_output=True, 
+                text=True, 
+                timeout=0.5
+            )
+            return result.stdout if result.returncode == 0 else None
         except:
             return None
 
     def fetch_api_data(self):
-        """High-precision real-time data from Termux API."""
         try:
             raw = os.popen("termux-battery-status").read().strip()
             return json.loads(raw) if raw else None
@@ -40,7 +46,6 @@ class ToolDroid:
             return None
 
     def fetch_hw_data(self):
-        """Hardware-level registers from Shizuku."""
         raw_dump = self._exec_shizuku("dumpsys battery")
         if not raw_dump: return None
         adv = {}
@@ -63,7 +68,7 @@ class ToolDroid:
         current_ma = api.get('current', 0)
 
         screen = [
-            f"{self.colors['header']}{self.colors['bold']}--- Trizon's MonitorDroid v1.1.0 ---{self.colors['end']}",
+            f"{self.colors['header']}{self.colors['bold']}--- Trizon's ToolDroid v1.5 ---{self.colors['end']}",
             f"Power State:  {status} ({pct}%)",
             "─" * 35,
             f"{self.colors['core']}[ DEFAULT MONITOR ]{self.colors['end']}",
@@ -76,7 +81,6 @@ class ToolDroid:
             try:
                 f_cap_raw = hw.get('full charge capacity') or hw.get('charge full') or hw.get('charge_full')
                 f_cap = int(f_cap_raw) if f_cap_raw else 0
-                
                 if f_cap > 20000: f_cap //= 1000
                 
                 max_val = f_cap if f_cap > 0 else self.design_capacity
@@ -89,21 +93,20 @@ class ToolDroid:
                     "─" * 35
                 ]
             except:
-                screen += [f"{self.colors['fail']}Shizuku: Parsing Error{self.colors['end']}", "─" * 35]
+                screen += [f"{self.colors['fail']}Shizuku: Data Error{self.colors['end']}", "─" * 35]
         else:
             screen += [
-                "\033[2mShizuku not detected/authorized.\033[0m",
+                "\033[2mShizuku: Standby/Unauthorized\033[0m",
                 "─" * 35
             ]
 
-        # Added message for Meylin
+        # Your message for Mey
         screen += [
-            f"{self.colors['love']}Mey, I love you. I hate how far we are{self.colors['end']}",
-            f"{self.colors['love']}and how little and stupid I do.{self.colors['end']}",
+            f"{self.colors['love']}❤ Mey, I love you. I hate how far we are{self.colors['end']}",
+            f"{self.colors['love']}  and how little and stupid I do.{self.colors['end']}",
             "─" * 35,
-            "Refresh: 100 ms | Ctrl+C to Exit"
+            "Refresh: 100ms | Ctrl+C to Exit"
         ]
-        
         return "\n".join(screen)
 
 if __name__ == "__main__":
