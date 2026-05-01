@@ -29,14 +29,9 @@ class ToolDroid:
 
     def _exec_shizuku(self, command):
         try:
-            # Increased timeout slightly for stability
-            result = subprocess.run(
-                ['sh', self.rish_path, '-c', command], 
-                capture_output=True, 
-                text=True, 
-                timeout=1.0 
-            )
-            return result.stdout if result.returncode == 0 else None
+            # Faster execution with a direct subprocess call
+            result = subprocess.check_output(['sh', self.rish_path, '-c', command], stderr=subprocess.DEVNULL)
+            return result.decode('utf-8')
         except:
             return None
 
@@ -48,9 +43,9 @@ class ToolDroid:
             return None
 
     def fetch_hw_data(self):
-        # Only check Shizuku every 5 seconds to prevent process flooding
-        current_time = time.time()
-        if current_time - self.last_hw_check > 5 or self.cached_hw is None:
+        # Increased sync frequency to 2s for better response
+        curr_time = time.time()
+        if curr_time - self.last_hw_check > 2 or self.cached_hw is None:
             raw_dump = self._exec_shizuku("dumpsys battery")
             if raw_dump:
                 adv = {}
@@ -59,7 +54,7 @@ class ToolDroid:
                         k, v = line.split(":", 1)
                         adv[k.strip().lower()] = v.strip()
                 self.cached_hw = adv
-                self.last_hw_check = current_time
+                self.last_hw_check = curr_time
         return self.cached_hw
 
     def render(self):
@@ -67,16 +62,15 @@ class ToolDroid:
         hw = self.fetch_hw_data()
         
         if not api:
-            return f"{self.colors['fail']}ERROR: Termux:API Unreachable{self.colors['end']}"
+            return f"{self.colors['fail']}ERROR: API Unreachable{self.colors['end']}"
 
         pct = api.get('percentage', 0)
-        status = api.get('status', 'Unknown')
         temp = api.get('temperature', 0)
         current_ma = api.get('current', 0)
 
         screen = [
-            f"{self.colors['header']}{self.colors['bold']}--- Trizon's ToolDroid v1.5.1 ---{self.colors['end']}",
-            f"Power State:  {status} ({pct}%)",
+            f"{self.colors['header']}{self.colors['bold']}--- Trizon's ToolDroid v1.5.2 ---{self.colors['end']}",
+            f"Power State:  {api.get('status')} ({pct}%)",
             "─" * 35,
             f"{self.colors['core']}[ DEFAULT MONITOR ]{self.colors['end']}",
             f"Temperature:  {temp}°C",
@@ -100,18 +94,15 @@ class ToolDroid:
                     "─" * 35
                 ]
             except:
-                screen += [f"{self.colors['fail']}Shizuku: Processing...{self.colors['end']}", "─" * 35]
+                screen += [f"{self.colors['fail']}Shizuku: Syncing...{self.colors['end']}", "─" * 35]
         else:
-            screen += [
-                "\033[2mShizuku: Waiting for Authorization...\033[0m",
-                "─" * 35
-            ]
+            screen += [f"\033[2mShizuku: Not Authorized\033[0m", "─" * 35]
 
         screen += [
             f"{self.colors['love']}❤ Mey, I love you. I hate how far we are{self.colors['end']}",
             f"{self.colors['love']}  and how little and stupid I do.{self.colors['end']}",
             "─" * 35,
-            "Refresh: 100ms | HW Sync: 5s"
+            "Refresh: 100ms | HW Sync: 2s"
         ]
         return "\n".join(screen)
 
