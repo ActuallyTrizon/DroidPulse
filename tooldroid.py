@@ -18,7 +18,7 @@ class ToolDroid:
             "bold": "\033[1m"
         }
 
-        def _exec_shizuku(self, command):
+    def _exec_shizuku(self, command):
         try:
             result = subprocess.check_output(
                 ['sh', self.rish_path, '-c', command], 
