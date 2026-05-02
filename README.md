@@ -17,13 +17,14 @@
 1. Install Termux from GitHub or F-Droid.
 2. Install Termux Api from GitHub or F-Droid.
 3. Install dependencies:
-   ```bash
+   ```
    pkg update && pkg install python termux-api -y
 4. Download the source code.
 5. Extract the zip.
-6. Run ```cd ~/storage/downloads/ToolDroid-Main/```
-7. Run ```ls``` (Optional)
-8. Run ```python tooldroid.py```
+6. Run ```
+   cd ~/storage/downloads/ToolDroid-Main/```
+8. Run ```ls``` (Optional)
+9. Run ```python tooldroid.py```
 
 ## Shizuku 🦊
 **Activate Shizuku**
